@@ -5,8 +5,10 @@ from std_msgs.msg import String
 import actionlib
 import json
 
+# chemin vers le fichier qui contient les positions enregistrées
 FILE_PATH = "positions.json"
 
+# fonction permettant de lire les positions contenues dans le fichier
 def load_positions_from_file():
     try:
         with open(FILE_PATH, "r") as f:
@@ -15,6 +17,7 @@ def load_positions_from_file():
     except Exception as e:
          rospy.loginfo(e)
 
+# fonction permettant d'envoyer le robot à une position
 def send_goal(position):
     client = actionlib.SimpleActionClient("move_base", MoveBaseAction)
     client.wait_for_server()
@@ -33,6 +36,7 @@ def send_goal(position):
     client.send_goal(goal)
     client.wait_for_result()
 
+# fonction appellée lorsqu'un message est écrit sur le topic /go_to_position
 def position_callback(msg):
     global positions
     positions = load_positions_from_file()
